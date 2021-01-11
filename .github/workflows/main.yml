@@ -67,7 +67,7 @@ jobs:
         cd openwrt/
         echo -e "$(nproc) thread compile"
         sudo mkdir -p bin
-        sudo cp -v /lib/modules/$(uname -r)/build/Module.symvers src/os/linux
+        sudo cp -v /lib/modules/$(uname -r)/build/Module.symvers os/linux
         sudo make clean
         sudo make all 
         sudo make install 
@@ -81,8 +81,8 @@ jobs:
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        sudo rm -rvf src/os/linux/Module.symvers
-        sudo cp openwrt/src/os/linux/*.ko openwrt/bin
+        sudo rm -rvf os/linux/Module.symvers
+        sudo cp openwrt/os/linux/*.ko openwrt/bin
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
