@@ -50,6 +50,7 @@ jobs:
       run: |
         df -hT $PWD
         wget https://master.dl.sourceforge.net/project/openwrtres/mt7610u/MT7601U_LinuxAP_3.0.0.1_20130802.zip?viasf=1
+        mv MT7601U_LinuxAP_3.0.0.1_20130802.zip?viasf=1 MT7601U_LinuxAP_3.0.0.1_20130802.zip
         unzip MT7601U_LinuxAP_3.0.0.1_20130802.zip
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
