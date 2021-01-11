@@ -49,7 +49,8 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        wget https://master.dl.sourceforge.net/project/openwrtres/mt7610u/MT7601U_LinuxAP_3.0.0.1_20130802.zip?viasf=1
+        unzip MT7601U_LinuxAP_3.0.0.1_20130802.zip
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: SSH connection to Actions
@@ -62,7 +63,7 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
-        cd openwrt
+        cd openwrt/MT7601U_LinuxAP_3.0.0.1_20130802
         echo -e "$(nproc) thread compile"
         sudo mkdir -p bin
         sudo cp -v /lib/modules/$(uname -r)/build/Module.symvers src/os/linux
@@ -80,7 +81,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         sudo rm -rvf src/os/linux/Module.symvers
-        sudo cp openwrt/src/os/linux/*.ko openwrt/bin
+        sudo cp openwrt/MT7601U_LinuxAP_3.0.0.1_20130802/src/os/linux/*.ko openwrt/MT7601U_LinuxAP_3.0.0.1_20130802/bin
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
@@ -89,7 +90,7 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: mtk7601u_ap_driver${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/bin
+        path: openwrt/MT7601U_LinuxAP_3.0.0.1_20130802/bin
 
     - name: Generate release tag
       id: tag
@@ -107,7 +108,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: openwrt/bin/*
+        files: openwrt/MT7601U_LinuxAP_3.0.0.1_20130802/bin/*
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
